@@ -1,6 +1,7 @@
 <?php
+
 // Add the settings page under the "Settings" menu
-function blogstorm_add_settings_page()
+function blogstorm_add_settings_page(): void
 {
     add_options_page(
         'Blogstorm Settings',
@@ -12,33 +13,72 @@ function blogstorm_add_settings_page()
 }
 
 add_action('admin_menu', 'blogstorm_add_settings_page');
-
-// Register settings and fields
-function blogstorm_register_settings()
+function blogstorm_register_settings_init(): void
 {
-    register_setting('blogstorm-settings-group', 'blogstorm_auth_token'); // Match the settings group slug here
+    // Register the setting with validation callback
+    register_setting('blogstorm-settings-group', 'blogstorm_auth_token', 'blogstorm_validate_auth_token');
+
+    // Add a new section if needed
+    add_settings_section(
+        'blogstorm-auth-section',
+        'Authentication Settings',
+        'blogstorm_auth_section_callback',
+        'blogstorm-settings-group'
+    );
+
+    // Add a new field to the section
+    add_settings_field(
+        'blogstorm_auth_token',
+        'Authentication Token',
+        'blogstorm_auth_token_callback',
+        'blogstorm-settings-group',
+        'blogstorm-auth-section'
+    );
 }
 
-add_action('admin_init', 'blogstorm_register_settings');
+add_action('admin_init', 'blogstorm_register_settings_init');
 
-
-// Render the settings page
-function blogstorm_render_settings_page()
+// Validate the authentication token
+function blogstorm_validate_auth_token($input)
 {
-    $token = get_option('blogstorm_auth_token');
+    $new_value = sanitize_text_field($input);
 
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        echo "Hello";
-        $newToken = sanitize_text_field($_POST['blogstorm_auth_token']);
-        if (strlen($newToken) < 36) {
-            add_settings_error('blogstorm_auth_token', 'invalid_token', 'Authentication Token must be at least 36 characters long.', 'error');
-        } else {
-            update_option('blogstorm_auth_token', $newToken);
-            add_settings_error('blogstorm_auth_token', 'token_updated', 'Authentication Token updated successfully.', 'updated');
-        }
+    if (strlen($new_value) < 36) {
+        add_settings_error(
+            'blogstorm_auth_token',
+            'auth_token_invalid',
+            'Authentication Token should have a minimum length of 36 characters.',
+            'error'
+        );
+        return get_option('blogstorm_auth_token'); // Revert to the previous value
     }
 
-    settings_errors('blogstorm_auth_token');
+    return $new_value;
+}
+
+// Callback for the authentication token field
+function blogstorm_auth_token_callback(): void
+{
+    $auth_token = esc_attr(get_option('blogstorm_auth_token'));
+    ?>
+    <input type="text" name="blogstorm_auth_token"
+           id="blogstorm_auth_token"
+           placeholder="EXAMPLE-1234-5678-9012-EXAMPLE"
+           value="<?php echo $auth_token; ?>"
+    />
+    <p class="description">Please enter a token with a minimum length of 36 characters.</p>
+    <?php
+}
+
+// Callback for the authentication section
+function blogstorm_auth_section_callback(): void
+{
+    echo '<p>Enter your authentication settings below:</p>';
+}
+
+// Render the settings page
+function blogstorm_render_settings_page(): void
+{
     ?>
     <div class="wrap">
         <h2>Blogstorm Settings</h2>
@@ -52,21 +92,6 @@ function blogstorm_render_settings_page()
         <form method="post" action="options.php">
             <?php settings_fields('blogstorm-settings-group'); ?>
             <?php do_settings_sections('blogstorm-settings-group'); ?>
-            <table class="form-table">
-                <tr class="form-field form-required">
-                    <th scope="row"><label for="blogstorm_auth_token">Authentication Token <span class="description">(required)</span></label>
-                    </th>
-                    <td>
-                        <input type="text" name="blogstorm_auth_token"
-                               id="blogstorm_auth_token"
-                               placeholder="EXAMPLE-1234-5678-9012-EXAMPLE"
-                               value="<?php echo esc_attr(get_option('blogstorm_auth_token')); ?>"
-                        />
-<!--                               required minlength="36"-->
-                        <p class="description">Please enter a token with a minimum length of 36 characters.</p>
-                    </td>
-                </tr>
-            </table>
             <?php submit_button(); ?>
         </form>
     </div>

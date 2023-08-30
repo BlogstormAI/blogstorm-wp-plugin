@@ -1,6 +1,6 @@
 <?php
 // Activation hook to create custom database table
-function blogstorm_content_activate() {
+function blogstorm_content_activate(): void {
     global $wpdb;
     $table_name = $wpdb->prefix . 'blogstorm_auth_tokens';
     $charset_collate = $wpdb->get_charset_collate();

@@ -3,7 +3,7 @@ require_once( ABSPATH . '/wp-admin/includes/taxonomy.php');
 
 
 // Register the categories endpoint
-function blogstorm_register_categories_route()
+function blogstorm_register_categories_route(): void
 {
     register_rest_route('blogstorm/v1', 'categories', array(
         'methods' => 'GET',
@@ -17,7 +17,7 @@ function blogstorm_register_categories_route()
 }
 
 // Callback function for the categories endpoint
-function blogstorm_get_categories()
+function blogstorm_get_categories(): array
 {
     $categories = get_categories(array(
         'orderby' => 'name',
@@ -38,7 +38,7 @@ function blogstorm_get_categories()
 }
 
 // Callback function for the get-or-create endpoint
-function blogstorm_get_or_create_category($request)
+function blogstorm_get_or_create_category($request): array
 {
 //    Check if the a category exists with the given slug or name
 //    If it does, return the category

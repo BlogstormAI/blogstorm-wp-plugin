@@ -16,3 +16,5 @@ function blogstorm_add_settings_link($links)
     );
     return array_merge($links, $settings_links);
 }
+
+add_filter('plugin_action_links_' . BASE_PLUGIN_PATH, 'blogstorm_add_settings_link');

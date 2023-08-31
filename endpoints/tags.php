@@ -1,6 +1,6 @@
 <?php
 // Register the tags endpoint
-function blogstorm_register_tags_route()
+function blogstorm_register_tags_route(): void
 {
     register_rest_route('blogstorm/v1', 'tags', array(
         'methods' => 'GET',
@@ -8,8 +8,10 @@ function blogstorm_register_tags_route()
     ));
 }
 
+add_action('rest_api_init', 'blogstorm_register_tags_route');
+
 // Callback function for the tags endpoint
-function blogstorm_get_tags()
+function blogstorm_get_tags(): array
 {
     $tags = get_tags(array(
         'orderby' => 'name',

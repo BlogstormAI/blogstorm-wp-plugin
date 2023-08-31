@@ -1,7 +1,6 @@
 <?php
 require_once( ABSPATH . '/wp-admin/includes/taxonomy.php');
 
-
 // Register the categories endpoint
 function blogstorm_register_categories_route(): void
 {
@@ -15,6 +14,8 @@ function blogstorm_register_categories_route(): void
         'callback' => 'blogstorm_get_or_create_category',
     ));
 }
+
+add_action('rest_api_init', 'blogstorm_register_categories_route');
 
 // Callback function for the categories endpoint
 function blogstorm_get_categories(): array
@@ -40,7 +41,7 @@ function blogstorm_get_categories(): array
 // Callback function for the get-or-create endpoint
 function blogstorm_get_or_create_category($request): array
 {
-//    Check if the a category exists with the given slug or name
+//    Check if a category exists with the given slug or name
 //    If it does, return the category
 //    If it doesn't, create a new category and return it
 
@@ -48,6 +49,17 @@ function blogstorm_get_or_create_category($request): array
     $slug = $request->get_param('slug');
     $name = $request->get_param('name');
     $category_description = $request->get_param('category_description');
+
+    if (!$blogstorm_auth_string) {
+        return array(
+            'error' => 'No authentication header provided',
+        );
+    }
+    if ($blogstorm_auth_string !== get_option(BS_TOKEN_NAME)) {
+        return array(
+            'error' => 'Invalid authentication header provided',
+        );
+    }
 
     $category = get_category_by_slug($slug);
     if ($category) {

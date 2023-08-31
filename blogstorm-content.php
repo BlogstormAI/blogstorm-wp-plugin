@@ -10,11 +10,14 @@ License: A "Slug" license name e.g. GPL2
 */
 
 const BS_TOKEN_NAME = 'blogstorm_auth_token';
-const BS_TOKEN_LENGTH = 32;
+const BS_TOKEN_LENGTH = 36;
 
 // Include the category and tag endpoint files
 require_once plugin_dir_path(__FILE__) . 'endpoints/categories.php';
 require_once plugin_dir_path(__FILE__) . 'endpoints/tags.php';
 
 // Include settings code
-require_once plugin_dir_path(__FILE__) . 'settings/settings.php';
+if (is_admin()) {
+    require_once plugin_dir_path(__FILE__) . 'settings/settings.php';
+    add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'blogstorm_add_settings_link');
+}

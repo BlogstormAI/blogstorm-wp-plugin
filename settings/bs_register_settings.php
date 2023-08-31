@@ -20,8 +20,8 @@ add_action('admin_init', 'blogstorm_register_settings');
 function blogstorm_validate_auth_token($input)
 {
     $new_value = sanitize_text_field($input);
-    if (strlen($new_value) !== 36) {
-        add_settings_error(BS_TOKEN_NAME, 'auth_token_invalid', 'Authentication Token should have a length of 36 characters.', 'error');
+    if (strlen($new_value) !== BS_TOKEN_LENGTH) {
+        add_settings_error(BS_TOKEN_NAME, 'auth_token_invalid', 'Authentication Token should have a length of '. BS_TOKEN_LENGTH .' characters.', 'error');
         return get_option(BS_TOKEN_NAME);
     }
     return $new_value;
@@ -37,11 +37,12 @@ function blogstorm_auth_token_callback(): void
         <button type="button" id="toggleButton">Show</button>
     </div>
     <?php if (empty($auth_token)) { ?>
-    <a href="https://demo.blogstorm.ai/" target="_blank">
-        <small>Get your authentication token</small>
-    </a>
-<?php } ?>
-    <small class="description">Please enter a token with a minimum length of 36 characters.</small>
+        <a href="https://demo.blogstorm.ai/" target="_blank">
+            <small>Get your authentication token</small>
+        </a>
+    <?php } ?>
+
+    <small class="description">Please enter a token with a minimum length of <?php echo BS_TOKEN_LENGTH ?> characters.</small>
     <?php
 }
 

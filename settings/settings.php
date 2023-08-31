@@ -2,6 +2,7 @@
 
 require_once plugin_dir_path(__FILE__) . 'bs_add_settings_page.php';
 require_once plugin_dir_path(__FILE__) . 'bs_register_settings.php';
+require_once plugin_dir_path(__FILE__) . 'bs_link_settings_to_plugin.php';
 
 function blogstorm_render_settings_page(): void
 {

@@ -17,7 +17,7 @@ const BS_TOKEN_LENGTH = 36;
 // Include the category and tag endpoint files
 require_once plugin_dir_path(__FILE__) . 'endpoints/categories/categories.php';
 require_once plugin_dir_path(__FILE__) . 'endpoints/tags/tags.php';
-
+require_once plugin_dir_path(__FILE__) . 'endpoints/posts/posts.php';
 // Include settings code
 if (is_admin()) {
     require_once plugin_dir_path(__FILE__) . 'settings/settings.php';

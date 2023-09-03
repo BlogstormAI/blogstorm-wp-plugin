@@ -1,5 +1,8 @@
 <?php
 require_once(plugin_dir_path(__FILE__) . 'bs_register_posts_route.php');
+require_once(ABSPATH . 'wp-admin/includes/media.php');
+require_once(ABSPATH . 'wp-admin/includes/file.php');
+require_once(ABSPATH . 'wp-admin/includes/image.php');
 
 
 // GET endpoint for fetching posts with pagination
@@ -45,7 +48,7 @@ function blogstorm_create_post($request): WP_Error|array
     $title = sanitize_text_field($request['title']);
     $content = wp_kses_post($request['content']);
     $excerpt = sanitize_text_field($request['excerpt']);
-    $featured_image = esc_url($request['featured_image']);
+    $featured_image_url = esc_url($request['featured_image_url']);
     $categories = $request['categories']; // An array of category IDs
     $tags = $request['tags']; // An array of tag IDs
 
@@ -59,17 +62,19 @@ function blogstorm_create_post($request): WP_Error|array
 
     $post_id = wp_insert_post($new_post);
 
+    $featured_image = media_sideload_image($featured_image_url, $post_id, $title, 'id');
+
     if (!is_wp_error($post_id)) {
         // Set featured image
         if ($featured_image) {
-            set_post_thumbnail($post_id, $featured_image);
+            set_post_thumbnail($post_id, thumbnail_id: $featured_image);
         }
 
         // Set categories and tags
         wp_set_post_categories($post_id, $categories);
         wp_set_post_tags($post_id, $tags);
 
-        return array('message' => 'Post created successfully', 'post_id' => $post_id);
+        return array('message' => 'Post created successfully', 'post_id' => $post_id, 'post_url' => get_permalink($post_id));
     } else {
         return new WP_Error('error', 'Failed to create a new post');
     }

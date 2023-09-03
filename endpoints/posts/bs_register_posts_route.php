@@ -12,10 +12,7 @@ function bs_register_post_routes(): void
 
     register_rest_route('blogstorm/v1', 'posts/create', array(
         'methods' => 'POST',
-        'callback' => bs_auth_required('blogstorm_create_post'), // Include bs_auth_required wrapper
-        'permission_callback' => function () {
-            return current_user_can('publish_posts');
-        },
+        'callback' => bs_auth_required('blogstorm_create_post') // Include bs_auth_required wrapper
     ));
 
 

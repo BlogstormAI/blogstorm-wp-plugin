@@ -11,11 +11,17 @@
 function bs_header_required(callable $callback): Closure
 {
     return function ($request) use ($callback) {
-        $blogstorm_sent_from_header_string = $request->get_header('x-sent-from-blogstorm');
+        $blogstorm_sent_by_header_string = $request->get_header('x-sent-by');
 
-        if (!$blogstorm_sent_from_header_string) {
+        if (!$blogstorm_sent_by_header_string) {
             return array(
                 'error' => 'No authentication header provided',
+            );
+        }
+
+        if ($blogstorm_sent_by_header_string !== "Blogstorm.AI (https://blogstorm.ai)") {
+            return array(
+                'error' => 'Invalid authentication header provided',
             );
         }
 

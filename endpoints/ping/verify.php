@@ -11,7 +11,7 @@ function blogstorm_ping_verify($request)
 
     // Prepare the data for the POST request
     $auth_token = get_option(BS_TOKEN_NAME);
-    $base_url = 'http://localhost:8080'; // Replace with your WordPress site URL
+    $base_url = get_site_url(); // Base URL of the WordPress site
 
     // Send the POST request
     $response = wp_remote_get($api_base_url . '?auth_token=' . $auth_token . '&base_url=' . $base_url, array('timeout' => 10, 'sslverify' => false));

@@ -5,9 +5,9 @@ require_once(plugin_dir_path(__FILE__) . 'bs_register_ping_verify.php');
 function blogstorm_ping_verify($request)
 {
     // Determine the base URL and auth token based on the environment
-    $development = getenv('BS_ENV') === 'development';
-    error_log('development' . $development);
-    $api_base_url = $development ? 'https://demo.blogstorm.ai/api/public/verify-wp-site' : 'http://localhost:3000/api/public/verify-wp-site';
+    $production = getenv('BS_ENV') === 'production';
+    error_log('production:   ' . getenv('BS_ENV'));
+    $api_base_url = $production ? BS_PROD_PING_VERIFY_URL : BS_DEV_PING_VERIFY_URL;
 
     // Prepare the data for the POST request
     $auth_token = get_option(BS_TOKEN_NAME);

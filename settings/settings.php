@@ -27,6 +27,7 @@ function blogstorm_render_settings_page(): void
                 false,
                 ['style' => 'margin-top: 20px; display: block; margin-bottom: 7px;']
             ); ?>
+            <button type="button" class="button" id="ping-verify-button">Ping Verify</button>
             <?php if ($bs_auth_token) { ?>
                 <small>Press the submit button to save your authentication token.</small>
             <?php } ?>
@@ -56,6 +57,21 @@ function blogstorm_render_settings_page(): void
             bsTokenInput.style.border = "1px solid #C98AFFFF";
             bsTokenInput.value = isBsAuthToken;
         }
+
+        const pingVerifyButton = document.getElementById('ping-verify-button');
+        pingVerifyButton.addEventListener('click', async (event) => {
+            await fetch("/wp-json/blogstorm/v1/ping-verify", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            }).then(async (response) => {
+                const data = await response.json();
+                alert(data['message']);
+            }).catch((error) => {
+                alert("Error while sending Ping Verify request");
+            });
+        });
     </script>
     <?php
 }

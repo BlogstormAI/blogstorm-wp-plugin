@@ -6,7 +6,6 @@ function blogstorm_get_site_info(): array
     return array(
         'name' => get_bloginfo('name'),
         'description' => get_bloginfo('description'),
-        'url' => site_url(),
-        'admin_email' => get_option('admin_email'),
+        'url' => site_url()
     );
 }

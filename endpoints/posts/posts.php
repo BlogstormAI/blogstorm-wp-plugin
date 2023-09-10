@@ -43,7 +43,7 @@ function blogstorm_get_posts($request): array
 }
 
 // POST endpoint for creating a new post
-function blogstorm_get_or_create_post($request): WP_Error|array
+function blogstorm_get_or_create_post($request): mixed
 {
     $post_id = $request['post_id'];
     $title = sanitize_text_field($request['title']);
@@ -132,7 +132,7 @@ function blogstorm_get_or_create_post($request): WP_Error|array
 }
 
 
-function blogstorm_get_post_by_id($request): WP_Error|array
+function blogstorm_get_post_by_id($request): mixed
 {
     $post_id = isset($request['id']) ? absint($request['id']) : null;
 

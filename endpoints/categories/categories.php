@@ -8,16 +8,21 @@ require_once(plugin_dir_path(__FILE__) . 'bs_register_categories_route.php');
  **/
 function blogstorm_get_categories($request): array
 {
-    $per_page = isset($request['per_page']) ? absint($request['per_page']) : 10;
+    $per_page = $request['per_page'] ?: 10;
     $page = isset($request['page']) ? absint($request['page']) : 1;
 
-    $categories = get_categories(array(
+    $categories_query = array(
         'orderby' => 'name',
         'order' => 'ASC',
-        'hide_empty' => false,
-        'number' => $per_page,
-        'offset' => ($page - 1) * $per_page,
-    ));
+        'hide_empty' => false
+    );
+
+    if ($per_page !== 'all') {
+        $categories_query['number'] = absint($per_page);
+        $categories_query['offset'] = ($page - 1) * $per_page;
+    }
+
+    $categories = get_categories($categories_query);
 
     $total_categories = wp_count_terms('category', array('hide_empty' => false));
 

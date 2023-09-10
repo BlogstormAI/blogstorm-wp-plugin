@@ -3,16 +3,21 @@ require_once(plugin_dir_path(__FILE__) . 'bs_register_tags_route.php');
 
 function blogstorm_get_tags($request): array
 {
-    $per_page = isset($request['per_page']) ? absint($request['per_page']) : 10;
+    $per_page = $request['per_page'] ?: 10;
     $page = isset($request['page']) ? absint($request['page']) : 1;
 
-    $tags = get_tags(array(
+    $tags_query = array(
         'orderby' => 'name',
         'order' => 'ASC',
-        'hide_empty' => false,
-        'number' => $per_page,
-        'offset' => ($page - 1) * $per_page,
-    ));
+        'hide_empty' => false
+    );
+
+    if ($per_page !== 'all') {
+        $tags_query['number'] = absint($per_page);
+        $tags_query['offset'] = ($page - 1) * $per_page;
+    }
+
+    $tags = get_tags($tags_query);
 
     $total_tags = wp_count_terms('post_tag', array('hide_empty' => false));
 

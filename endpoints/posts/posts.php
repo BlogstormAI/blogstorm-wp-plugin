@@ -116,7 +116,7 @@ function blogstorm_get_or_create_post($request): mixed
         $featured_image = media_sideload_image($featured_image_url, $post_id, $title, 'id');
 
         if ($featured_image) {
-            set_post_thumbnail($post_id, thumbnail_id: $featured_image);
+            set_post_thumbnail($post_id, $featured_image);
         }
     }
 

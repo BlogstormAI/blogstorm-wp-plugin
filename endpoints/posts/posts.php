@@ -73,19 +73,14 @@ function blogstorm_get_or_create_post($request): mixed
             }
 
             if ($featured_image_url) {
-                error_log("featured image url: " . $featured_image_url);
                 $featured_image = media_sideload_image($featured_image_url, $existing_post, $title, 'id');
-                error_log("featured image posted.");
                 if ($featured_image) {
                     set_post_thumbnail($existing_post, $featured_image);
-                    error_log("featured image set.");
                 }
             }
 
             wp_set_post_categories($post_id, $categories);
-            error_log("categories set.");
             wp_set_post_tags($post_id, $tags);
-            error_log("tags set.");
 
             return array(
                 'message' => 'Post updated successfully',

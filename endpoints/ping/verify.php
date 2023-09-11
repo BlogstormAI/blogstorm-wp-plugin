@@ -6,7 +6,6 @@ function blogstorm_ping_verify($request)
 {
     // Determine the base URL and auth token based on the environment
     $production = getenv('BS_ENV') === 'production';
-    error_log('production:   ' . getenv('BS_ENV'));
     $api_base_url = $production ? BS_PROD_PING_VERIFY_URL : BS_DEV_PING_VERIFY_URL;
 
     // Prepare the data for the POST request
@@ -15,7 +14,6 @@ function blogstorm_ping_verify($request)
 
     // Send the POST request
     $response = wp_remote_get($api_base_url . '?auth_token=' . $auth_token . '&base_url=' . $base_url, array('timeout' => 10, 'sslverify' => false));
-    error_log(json_encode($response));
 
     if (is_wp_error($response)) {
         return new WP_Error('ping_verify_error', 'Error while sending Ping Verify request');

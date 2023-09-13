@@ -5,8 +5,8 @@ require_once(plugin_dir_path(__FILE__) . 'bs_register_ping_verify.php');
 function blogstorm_ping_verify($request)
 {
     // Determine the base URL and auth token based on the environment
-    $production = getenv('BS_ENV') === 'production';
-    $api_base_url = $production ? BS_PROD_PING_VERIFY_URL : BS_DEV_PING_VERIFY_URL;
+    $is_development = getenv('BS_ENV') === 'development';
+    $api_base_url = $is_development ? BS_DEV_PING_VERIFY_URL : BS_PROD_PING_VERIFY_URL;
 
     // Prepare the data for the POST request
     $auth_token = get_option(BS_TOKEN_NAME);

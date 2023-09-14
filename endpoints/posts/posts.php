@@ -43,7 +43,7 @@ function blogstorm_get_posts($request): array
 }
 
 // POST endpoint for creating a new post
-function blogstorm_get_or_create_post($request): mixed
+function blogstorm_get_or_create_post($request)
 {
     $post_id = $request['post_id'];
     $title = sanitize_text_field($request['title']);

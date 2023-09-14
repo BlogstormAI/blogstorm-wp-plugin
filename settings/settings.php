@@ -31,6 +31,7 @@ function blogstorm_render_settings_page(): void
             <?php if ($bs_auth_token) { ?>
                 <small>Press the submit button to save your authentication token.</small>
             <?php } ?>
+            <div id="loading-text" style="margin-top: 7px;"></div>
         </form>
     </div>
     <script>
@@ -60,6 +61,10 @@ function blogstorm_render_settings_page(): void
 
         const pingVerifyButton = document.getElementById('ping-verify-button');
         pingVerifyButton.addEventListener('click', async (event) => {
+            const loadingText = document.getElementById('loading-text');
+            loadingText.innerText = 'Sending Ping Verify request...';
+            loadingText.style.color = "black";
+
             await fetch("/wp-json/blogstorm/v1/ping-verify", {
                 method: "POST",
                 headers: {
@@ -67,9 +72,18 @@ function blogstorm_render_settings_page(): void
                 }
             }).then(async (response) => {
                 const data = await response.json();
-                alert(data['message']);
+                if (data?.response?.message) {
+                    alert(data.response.message);
+                    loadingText.innerText = data.response.message;
+                    loadingText.style.color = "green";
+                } else {
+                    alert("Error while sending Ping Verify request");
+                    loadingText.innerText = "Error while sending Ping Verify request";
+                    loadingText.style.color = "red";
+                }
             }).catch((error) => {
                 alert("Error while sending Ping Verify request");
+                loadingText.innerText = "Error while sending Ping Verify request";
             });
         });
     </script>

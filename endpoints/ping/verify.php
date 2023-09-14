@@ -13,7 +13,14 @@ function blogstorm_ping_verify($request)
     $base_url = get_site_url(); // Base URL of the WordPress site
 
     // Send the POST request
-    $response = wp_remote_get($api_base_url . '?auth_token=' . $auth_token . '&base_url=' . $base_url, array('timeout' => 10, 'sslverify' => false));
+    $response = wp_remote_post($api_base_url, array(
+        'timeout' => 10,
+        'sslverify' => false,
+        'body' => array(
+            'auth_token' => $auth_token,
+            'base_url' => $base_url,
+        ),
+    ));
 
     if (is_wp_error($response)) {
         return new WP_Error('ping_verify_error', 'Error while sending Ping Verify request');

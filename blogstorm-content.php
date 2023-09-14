@@ -12,8 +12,8 @@ License: A "Slug" license name e.g. GPL2
 define("BASE_PLUGIN_PATH", plugin_basename(__FILE__));
 define("BASE_PLUGIN_DIR", plugin_dir_path(__FILE__));
 const BS_TOKEN_NAME = 'blogstorm_auth_token';
-const BS_PROD_PING_VERIFY_URL = 'https://demo.blogstorm.ai/api/public/verify-wp-site';
-const BS_DEV_PING_VERIFY_URL = 'http://localhost:3000/api/public/verify-wp-site';
+const BS_PROD_PING_VERIFY_URL = 'https://demo.blogstorm.ai/api/act/public/ping-wordpress-site';
+const BS_DEV_PING_VERIFY_URL = 'http://localhost:8000/api/act/public/ping-wordpress-site';
 
 const BS_TOKEN_LENGTH = 32;
 

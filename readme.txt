@@ -1,4 +1,4 @@
-=== SEOWriting ===
+=== Blogstorm ===
 Contributors: Blogstorm
 Tags: AI content, AI writing automation, seo writing
 Tested up to: 6.2
@@ -8,7 +8,7 @@ Stable tag: 1.1.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-AI writing tool for 1-click SEO-optimized articles, blog posts & affiliate content. Available in 48 languages, auto-posted to WordPress with AI Images
+AI automation content creation tool for 1-click SEO-optimized articles, blog posts & affiliate content. With long/short form content, seo optimized meta tags and cool AI generated images. 
 
 == Description ==
 

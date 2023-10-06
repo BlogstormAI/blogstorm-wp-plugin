@@ -18,6 +18,7 @@ const BS_DEV_PING_VERIFY_URL = 'http://localhost:8000/api/act/public/ping-wordpr
 const BS_TOKEN_LENGTH = 32;
 
 // Include the category and tag endpoint files
+require_once plugin_dir_path(__FILE__) . 'endpoints/links/internal_links.php';
 require_once plugin_dir_path(__FILE__) . 'endpoints/categories/categories.php';
 require_once plugin_dir_path(__FILE__) . 'endpoints/tags/tags.php';
 require_once plugin_dir_path(__FILE__) . 'endpoints/posts/posts.php';

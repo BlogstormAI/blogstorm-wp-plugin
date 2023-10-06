@@ -24,7 +24,7 @@ function blogstorm_get_internal_links($request): array
         $result[] = array(
             'link' => get_the_permalink(),
             'title' => get_the_title(),
-            'type' => 'Page'
+            'contentType' => 'Page'
         );
     }
 
@@ -41,7 +41,7 @@ function blogstorm_get_internal_links($request): array
         $result[] = array(
             'link' => get_the_permalink(),
             'title' => get_the_title(),
-            'type' => 'Post'
+            'contentType' => 'Post'
         );
     }
 
@@ -55,7 +55,7 @@ function blogstorm_get_internal_links($request): array
         $result[] = array(
             'link' => get_category_link($category->term_id),
             'title' => $category->name,
-            'type' => 'Category',
+            'contentType' => 'Category',
         );
     }
 

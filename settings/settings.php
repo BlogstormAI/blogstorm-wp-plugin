@@ -65,7 +65,7 @@ function blogstorm_render_settings_page(): void
             loadingText.innerText = 'Sending Ping Verify request...';
             loadingText.style.color = "black";
 
-            await fetch("/wp-json/blogstorm/v1/ping-verify", {
+            await fetch("<?php echo get_site_url(); ?>/wp-json/blogstorm/v1/ping-verify", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',

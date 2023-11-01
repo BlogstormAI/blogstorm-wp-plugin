@@ -152,22 +152,14 @@ function blogstorm_get_post_by_id($request): mixed
     }
 }
 
-
-function remove_h1_tags_from_content($request)
+function remove_h1_tags_from_single_post($request)
 {
-    $number_of_posts = isset($request['number_of_pages']) ? absint($request['number_of_pages']) : null;
+    $post_id = isset($request['id']) ? absint($request['id']) : null;
 
-    if ($number_of_posts) {
-        $args = array(
-            'numberposts' => $number_of_posts,
-            'post_type' => 'post'
-        );
+    if ($post_id) {
+        $post = get_post($post_id);
 
-        $posts = get_posts($args);
-        $updated_posts = array();
-
-        foreach ($posts as $post) {
-            // Use preg_replace to remove the h1 tags
+        if ($post) {
             $updated_content = preg_replace('/<h1[^>]*>([\s\S]*?)<\/h1[^>]*>/', '', $post->post_content);
             $updated_post = array(
                 'ID' => $post->ID,
@@ -178,15 +170,19 @@ function remove_h1_tags_from_content($request)
             $result = wp_update_post($updated_post);
 
             if (!is_wp_error($result)) {
-                $updated_posts[] = $post->post_name;
+                return array(
+                    'message' => 'Post h1 removed successfully',
+                    'post_id' => $post_id,
+                    'post_url' => get_permalink($post_id),
+                    'post_status' => get_post_status($post_id)
+                );
+            } else {
+                return new WP_Error('update_failed', 'Failed to update post', array('status' => 500));
             }
+        } else {
+            return new WP_Error('invalid_id', 'Invalid post ID', array('status' => 404));
         }
-
-        return array(
-            'message' => 'Posts updated successfully',
-            'updated_posts' => $updated_posts
-        );
     } else {
-        return new WP_Error('invalid_number', 'Invalid number of posts', array('status' => 400));
+        return new WP_Error('missing_id', 'Missing post ID', array('status' => 400));
     }
 }

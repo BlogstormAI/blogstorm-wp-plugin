@@ -24,7 +24,7 @@ function bs_register_post_routes(): void
     // Register the new endpoint for removing h1 tags
     register_rest_route('blogstorm/v1', 'posts/remove-h1', array(
         'methods' => 'GET',
-        'callback' => bs_auth_required('remove_h1_tags_from_content'),
+        'callback' => bs_auth_required('remove_h1_tags_from_single_post'),
     ));
 }
 add_action('rest_api_init', 'bs_register_post_routes');

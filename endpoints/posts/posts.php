@@ -151,3 +151,42 @@ function blogstorm_get_post_by_id($request): mixed
         return new WP_Error('invalid_id', 'Invalid post ID', array('status' => 400));
     }
 }
+
+
+function remove_h1_tags_from_content($request)
+{
+    $number_of_posts = isset($request['number_of_pages']) ? absint($request['number_of_pages']) : null;
+
+    if ($number_of_posts) {
+        $args = array(
+            'numberposts' => $number_of_posts,
+            'post_type' => 'post'
+        );
+
+        $posts = get_posts($args);
+        $updated_posts = array();
+
+        foreach ($posts as $post) {
+            // Use preg_replace to remove the h1 tags
+            $updated_content = preg_replace('/<h1[^>]*>([\s\S]*?)<\/h1[^>]*>/', '', $post->post_content);
+            $updated_post = array(
+                'ID' => $post->ID,
+                'post_content' => $updated_content,
+            );
+
+            // Use wp_update_post to apply the updated content
+            $result = wp_update_post($updated_post);
+
+            if (!is_wp_error($result)) {
+                $updated_posts[] = $post->ID;
+            }
+        }
+
+        return array(
+            'message' => 'Posts updated successfully',
+            'updated_posts' => $updated_posts
+        );
+    } else {
+        return new WP_Error('invalid_number', 'Invalid number of posts', array('status' => 400));
+    }
+}

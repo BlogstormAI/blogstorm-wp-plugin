@@ -178,7 +178,7 @@ function remove_h1_tags_from_content($request)
             $result = wp_update_post($updated_post);
 
             if (!is_wp_error($result)) {
-                $updated_posts[] = $post->ID;
+                $updated_posts[] = $post->post_name;
             }
         }
 

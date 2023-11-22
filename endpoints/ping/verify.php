@@ -16,10 +16,10 @@ function blogstorm_ping_verify($request)
     $response = wp_remote_post($api_base_url, array(
         'timeout' => 10,
         'sslverify' => false,
-        'body' => array(
+        'body' => json_encode(array(
             'auth_token' => $auth_token,
             'base_url' => $base_url,
-        ),
+        )),
     ));
 
     if (is_wp_error($response)) {
@@ -33,7 +33,7 @@ function blogstorm_ping_verify($request)
         } elseif ($response_code === 401) {
             return new WP_Error('unauthorized', 'You are not authorized to perform this action.', array('status' => 401));
         } elseif ($response_code === 400) {
-            return new WP_Error('bad_request', 'You are not authorized to perform this action, the "Auth Token" might be invalid.', array('status' => 400));
+            return array('message' => 'BAD.', 'response' => array('auth_token' => $auth_token, 'base_url' => $base_url), 'q'=> $response_body);
         } else {
             return new WP_Error('ping_verify_error', 'Error while sending "Ping Verify" request.', array('status' => $response_code));
         }

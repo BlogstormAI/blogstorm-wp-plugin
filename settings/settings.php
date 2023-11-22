@@ -6,7 +6,7 @@ require_once plugin_dir_path(__FILE__) . 'bs_link_settings_to_plugin.php';
 
 function blogstorm_render_settings_page(): void
 {
-    $bs_auth_token = sanitize_text_field($_GET['auth_token']);
+    $bs_auth_token = sanitize_text_field($_GET['auth_token'] ?? '');
     ?>
     <div class="wrap">
         <h2>Blogstorm Settings</h2>

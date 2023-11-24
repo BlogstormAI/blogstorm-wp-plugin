@@ -1,8 +1,9 @@
 <?php
-require_once( plugin_dir_path(__FILE__) . 'bs_register_page_route.php' );
+require_once( plugin_dir_path( __FILE__ ) . 'bs_register_page_route.php' );
 require_once( ABSPATH . 'wp-admin/includes/media.php' );
 require_once( ABSPATH . 'wp-admin/includes/file.php' );
 require_once( ABSPATH . 'wp-admin/includes/image.php' );
+
 
 // POST endpoint for creating a new page or sub page
 // Include parent_page_id for child_page creation
@@ -13,7 +14,7 @@ function blogstorm_get_or_create_page( $request ): WP_Error|array {
 	$meta_description = sanitize_text_field( $request['excerpt'] );
 	$parent_page_id   = $request['parent_page_id']; // ID of parent page for subpages
 	$post_status      = $request['post_status'];
-    $post_slug       = $request['post_slug'];
+	$post_slug        = $request['post_slug'];
 
 	if ( $page_id ) {
 		$existing_page = get_post( $page_id );
@@ -24,8 +25,7 @@ function blogstorm_get_or_create_page( $request ): WP_Error|array {
 				'post_title'   => $title,
 				'post_content' => $content,
 				'post_excerpt' => $meta_description,
-				'post_status'  => $post_status ?: 'publish',
-                'post_name'    => $post_slug ?: $existing_page->post_name
+				'post_status'  => $post_status ?: 'publish'
 			);
 
 			$page_id = wp_update_post( $updated_page );
@@ -51,10 +51,17 @@ function blogstorm_get_or_create_page( $request ): WP_Error|array {
 		'post_type'    => 'page',
 		'post_status'  => $post_status ?: 'publish',
 		'post_parent'  => $parent_page_id ?: 0, // Optional parent page ID
-        'post_name'    => $post_slug ?: sanitize_title($title)
 	);
 
 	$page_id = wp_insert_post( $new_page );
+
+	//	change page slug
+	$my_post = array(
+		'ID'        => $page_id,
+		'post_name' => $post_slug
+	);
+
+	wp_update_post( $my_post );
 
 	if ( is_wp_error( $page_id ) ) {
 		return new WP_Error( 'error', 'Failed to create a new page' );

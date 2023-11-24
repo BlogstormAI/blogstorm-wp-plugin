@@ -1,5 +1,5 @@
 <?php
-require_once( plugin_dir_path( __FILE__ ) . 'bs_register_pages_route.php' );
+require_once( plugin_dir_path(__FILE__) . 'bs_register_page_route.php' );
 require_once( ABSPATH . 'wp-admin/includes/media.php' );
 require_once( ABSPATH . 'wp-admin/includes/file.php' );
 require_once( ABSPATH . 'wp-admin/includes/image.php' );
@@ -13,6 +13,7 @@ function blogstorm_get_or_create_page( $request ): WP_Error|array {
 	$meta_description = sanitize_text_field( $request['excerpt'] );
 	$parent_page_id   = $request['parent_page_id']; // ID of parent page for subpages
 	$post_status      = $request['post_status'];
+    $post_slug       = $request['post_slug'];
 
 	if ( $page_id ) {
 		$existing_page = get_post( $page_id );
@@ -24,6 +25,7 @@ function blogstorm_get_or_create_page( $request ): WP_Error|array {
 				'post_content' => $content,
 				'post_excerpt' => $meta_description,
 				'post_status'  => $post_status ?: 'publish',
+                'post_name'    => $post_slug ?: $existing_page->post_name
 			);
 
 			$page_id = wp_update_post( $updated_page );
@@ -48,7 +50,8 @@ function blogstorm_get_or_create_page( $request ): WP_Error|array {
 		'post_excerpt' => $meta_description,
 		'post_type'    => 'page',
 		'post_status'  => $post_status ?: 'publish',
-		'post_parent'  => $parent_page_id ?: 0 // Optional parent page ID
+		'post_parent'  => $parent_page_id ?: 0, // Optional parent page ID
+        'post_name'    => $post_slug ?: sanitize_title($title)
 	);
 
 	$page_id = wp_insert_post( $new_page );

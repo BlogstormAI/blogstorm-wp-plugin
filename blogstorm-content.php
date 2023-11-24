@@ -24,6 +24,7 @@ require_once plugin_dir_path(__FILE__) . 'endpoints/tags/tags.php';
 require_once plugin_dir_path(__FILE__) . 'endpoints/posts/posts.php';
 require_once plugin_dir_path(__FILE__) . 'endpoints/site-info/site-info.php';
 require_once plugin_dir_path(__FILE__) . 'endpoints/ping/verify.php';
+require_once plugin_dir_path(__FILE__) . 'endpoints/pages/page.php';
 
 // Include settings code
 if (is_admin()) {

@@ -7,7 +7,7 @@ require_once( ABSPATH . 'wp-admin/includes/image.php' );
 
 // POST endpoint for creating a new page or sub page
 // Include parent_page_id for child_page creation
-function blogstorm_get_or_create_page( $request ): WP_Error|array {
+function blogstorm_get_or_create_page( $request ) {
 	$page_id          = $request['page_id'];
 	$title            = sanitize_text_field( $request['title'] );
 	$content          = wp_kses_post( $request['content'] );

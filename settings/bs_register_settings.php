@@ -37,7 +37,7 @@ function blogstorm_auth_token_callback(): void
         <button type="button" id="toggleButton">Show</button>
     </div>
     <?php if (empty($auth_token)) { ?>
-        <a href="https://demo.blogstorm.ai/" target="_blank">
+        <a href="https://app.blogstorm.ai/" target="_blank">
             <small>Get your authentication token</small>
         </a>
     <?php } ?>

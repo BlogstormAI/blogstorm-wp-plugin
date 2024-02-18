@@ -8,14 +8,19 @@ require_once(ABSPATH . 'wp-admin/includes/image.php');
 // Include parent_page_id for child_page creation
 function blogstorm_get_or_create_page($request)
 {
-    $post_slug = sanitize_text_field($request['post_slug']);
+    $page_id = $request['page_id'];
     $title = sanitize_text_field($request['title']);
     $content = wp_kses_post($request['content']);
     $meta_description = sanitize_text_field($request['excerpt']);
     $parent_page_id = $request['parent_page_id']; // ID of parent page for subpages
     $post_status = $request['post_status'];
+    $post_slug = $request['post_slug'];
 
-    $existing_page = get_page_by_path($post_slug, OBJECT, 'page');
+    if (!$parent_page_id) {
+        $existing_page = get_page_by_path($post_slug, OBJECT, 'page');
+    } else {
+        $existing_page = get_post($page_id);
+    }
 
     if ($existing_page) {
         $updated_page = array(

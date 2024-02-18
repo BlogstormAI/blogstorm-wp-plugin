@@ -17,16 +17,19 @@ function blogstorm_get_or_create_page($request)
     $post_slug = $request['post_slug'];
 
     if (!$parent_page_id) {
-        $existing_page = get_page_by_path($post_slug, OBJECT, 'page');
+        $b_page = get_page_by_path($post_slug, OBJECT, 'page');
+    } elseif ($page_id) {
+        $b_page = get_post($page_id);
     } else {
-        $existing_page = get_post($page_id);
+        $b_page = null;
     }
 
-    if ($existing_page) {
+    if ($b_page) {
         $updated_page = array(
-            'ID' => $existing_page->ID,
+            'ID' => $b_page->ID,
             'post_title' => $title,
             'post_name' => $post_slug,
+            'post_parent' => $parent_page_id,
             'post_content' => $content,
             'post_excerpt' => $meta_description,
             'post_status' => $post_status ?: 'publish'

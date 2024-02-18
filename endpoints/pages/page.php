@@ -17,14 +17,7 @@ function blogstorm_get_or_create_page($request)
     $post_slug = $request['post_slug'];
     $publish_date = $request['publish_date'];
     error_log('publish_date: ' . $publish_date);
-
-    if (!$parent_page_id) {
-        $b_page = get_page_by_path($post_slug, OBJECT, 'page');
-    } elseif ($page_id) {
-        $b_page = get_post($page_id);
-    } else {
-        $b_page = null;
-    }
+    $b_page = get_page_by_path($post_slug, OBJECT, 'page');
 
     if ($b_page) {
         $updated_page = array(

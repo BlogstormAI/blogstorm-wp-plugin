@@ -16,8 +16,8 @@ function blogstorm_get_or_create_page($request)
     $post_status = $request['post_status'];
     $post_slug = $request['post_slug'];
     $publish_date = $request['publish_date'];
-    error_log('publish_date: ' . $publish_date);
-    $b_page = get_page_by_path($post_slug, OBJECT, 'page');
+    $full_slug = $request['full_slug'];
+    $b_page = get_page_by_path($full_slug, OBJECT, 'page');
 
     if ($b_page) {
         $updated_page = array(

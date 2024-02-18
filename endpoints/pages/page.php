@@ -15,7 +15,8 @@ function blogstorm_get_or_create_page($request)
     $parent_page_id = $request['parent_page_id']; // ID of parent page for subpages
     $post_status = $request['post_status'];
     $post_slug = $request['post_slug'];
-    $published_date = $request['published_date'];
+    $publish_date = $request['publish_date'];
+    error_log('publish_date: ' . $publish_date);
 
     if (!$parent_page_id) {
         $b_page = get_page_by_path($post_slug, OBJECT, 'page');
@@ -34,8 +35,8 @@ function blogstorm_get_or_create_page($request)
             'post_content' => $content,
             'post_excerpt' => $meta_description,
             'post_status' => $post_status ?: 'publish',
-            'post_date' => $published_date,
-            'post_date_gmt' => $published_date,
+            'post_date' => $publish_date,
+            'post_date_gmt' => $publish_date,
         );
 
         $page_id = wp_update_post($updated_page);

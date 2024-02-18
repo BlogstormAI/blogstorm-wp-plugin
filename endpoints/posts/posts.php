@@ -53,6 +53,7 @@ function blogstorm_get_or_create_post($request)
     $categories = $request['categories'];
     $tags = $request['tags'];
     $post_status = $request['post_status'];
+    $publish_date = $request['publish_date'];
 
     if ($post_id) {
         $existing_post = get_post($post_id);
@@ -64,6 +65,8 @@ function blogstorm_get_or_create_post($request)
                 'post_content' => $content,
                 'post_excerpt' => $excerpt,
                 'post_status' => $post_status ?: 'publish',
+                'post_date' => $publish_date,
+                'post_date_gmt' => $publish_date,
             );
 
             $post_id = wp_update_post($updated_post);
@@ -98,6 +101,8 @@ function blogstorm_get_or_create_post($request)
         'post_excerpt' => $excerpt,
         'post_type' => 'post',
         'post_status' => $post_status ?: 'publish',
+        'post_date' => $publish_date,
+        'post_date_gmt' => $publish_date,
     );
 
     $post_id = wp_insert_post($new_post);

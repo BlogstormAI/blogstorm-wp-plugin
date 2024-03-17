@@ -42,6 +42,58 @@ function blogstorm_get_posts($request): array
     return $result;
 }
 
+// Function to check and cleanup broken links in the post content
+function check_and_cleanup_links($content)
+{
+    $dom = new DOMDocument;
+
+    libxml_use_internal_errors(true); // Prevent HTML5 errors from displaying
+    // Load the content to the DOM
+    $dom->loadHTML(mb_convert_encoding('<div>' . $content . '</div>', 'HTML-ENTITIES', 'UTF-8'), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+    libxml_clear_errors();
+
+    // Get all links
+    $links = $dom->getElementsByTagName('a');
+
+    // For each link
+    for ($i = $links->length - 1; $i >= 0; $i--) {
+        $linkNode = $links->item($i);
+        $href = $linkNode->getAttribute('href');
+
+        // If it's a broken link, make the changes
+        if (!is_link_working($href)) {
+            unset($href);
+            $linkNode->removeAttribute('href');
+        }
+    }
+
+    $html = $dom->saveHTML($dom->documentElement);
+    // Exclude added outer div
+    return substr($html, 5, -6);
+}
+
+// Function to check if a link is working or not
+function is_link_working($url)
+{
+    $ch = curl_init($url);
+
+    // Don't get the contents of the url
+    curl_setopt($ch, CURLOPT_NOBODY, true);
+
+    curl_exec($ch);
+
+    // If the response is not 200, consider it a broken link
+    if (curl_getinfo($ch, CURLINFO_HTTP_CODE) != 200) {
+        $is_working = false;
+    } else {
+        $is_working = true;
+    }
+
+    curl_close($ch);
+
+    return $is_working;
+}
+
 // POST endpoint for creating a new post
 function blogstorm_get_or_create_post($request)
 {
@@ -54,6 +106,9 @@ function blogstorm_get_or_create_post($request)
     $tags = $request['tags'];
     $post_status = $request['post_status'];
     $publish_date = $request['publish_date'];
+
+    $content = check_and_cleanup_links($content);
+    error_log($content);
 
     if ($post_id) {
         $existing_post = get_post($post_id);

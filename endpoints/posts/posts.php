@@ -121,6 +121,7 @@ function blogstorm_get_or_create_post($request)
     $tags = $request['tags'];
     $post_status = $request['post_status'];
     $publish_date = $request['publish_date'];
+    error_log("POST STATUS: " . $post_status);
 
     $content = check_and_cleanup_links($content);
     error_log($content);
@@ -134,7 +135,7 @@ function blogstorm_get_or_create_post($request)
                 'post_title' => $title,
                 'post_content' => $content,
                 'post_excerpt' => $excerpt,
-                'post_status' => $post_status ?: 'publish',
+                'post_status' => $post_status ?: 'pending',
                 'post_date' => $publish_date,
                 'post_date_gmt' => $publish_date,
             );

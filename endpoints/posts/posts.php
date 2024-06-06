@@ -121,10 +121,9 @@ function blogstorm_get_or_create_post($request)
     $tags = $request['tags'];
     $post_status = $request['post_status'];
     $publish_date = $request['publish_date'];
-    error_log("POST STATUS: " . $post_status);
 
+    // Check and cleanup broken links in the post content
     $content = check_and_cleanup_links($content);
-    error_log($content);
 
     if ($post_id) {
         $existing_post = get_post($post_id);

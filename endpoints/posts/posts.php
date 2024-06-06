@@ -4,6 +4,12 @@ require_once(ABSPATH . 'wp-admin/includes/media.php');
 require_once(ABSPATH . 'wp-admin/includes/file.php');
 require_once(ABSPATH . 'wp-admin/includes/image.php');
 
+//require_once ABSPATH . WPINC . './Requests/Autoload.php';
+WpOrg\Requests\Autoload::register();
+
+use WpOrg\Requests\Requests;
+use WpOrg\Requests\Response;
+use WpOrg\Requests\Exception;
 
 // GET endpoint for fetching posts with pagination
 function blogstorm_get_posts($request): array
@@ -43,55 +49,64 @@ function blogstorm_get_posts($request): array
 }
 
 // Function to check and cleanup broken links in the post content
+function is_link_working_parallel($urls)
+{
+    $requests = [];
+
+    foreach ($urls as $url) {
+        $requests[$url] = [
+            'url' => $url,
+            'type' => 'default',
+            'data' => [],
+            'options' => ['timeout' => 5]
+        ];
+    }
+
+    try {
+        $responses = Requests::request_multiple($requests);
+    } catch (Exception $e) {
+        error_log('Error fetching URLs: ' . $e->getMessage());
+        return [];
+    }
+
+    $results = [];
+    foreach ($responses as $url => $response) {
+        if ($response instanceof Response && $response->status_code == 200) {
+            $results[$url] = true;
+        } else {
+            $results[$url] = false;
+        }
+    }
+
+    return $results;
+}
+
 function check_and_cleanup_links($content)
 {
     $dom = new DOMDocument;
-
-    libxml_use_internal_errors(true); // Prevent HTML5 errors from displaying
-    // Load the content to the DOM
+    libxml_use_internal_errors(true);
     $dom->loadHTML(mb_convert_encoding('<div>' . $content . '</div>', 'HTML-ENTITIES', 'UTF-8'), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
     libxml_clear_errors();
 
-    // Get all links
     $links = $dom->getElementsByTagName('a');
+    $hrefs = [];
+    foreach ($links as $link) {
+        $href = $link->getAttribute('href');
+        $hrefs[] = $href;
+    }
 
-    // For each link
+    $results = is_link_working_parallel(array_unique($hrefs));
+
     for ($i = $links->length - 1; $i >= 0; $i--) {
         $linkNode = $links->item($i);
         $href = $linkNode->getAttribute('href');
-
-        // If it's a broken link, make the changes
-        if (!is_link_working($href)) {
-            unset($href);
+        if (!$results[$href]) {
             $linkNode->removeAttribute('href');
         }
     }
 
     $html = $dom->saveHTML($dom->documentElement);
-    // Exclude added outer div
     return substr($html, 5, -6);
-}
-
-// Function to check if a link is working or not
-function is_link_working($url)
-{
-    $ch = curl_init($url);
-
-    // Don't get the contents of the url
-    curl_setopt($ch, CURLOPT_NOBODY, true);
-
-    curl_exec($ch);
-
-    // If the response is not 200, consider it a broken link
-    if (curl_getinfo($ch, CURLINFO_HTTP_CODE) != 200) {
-        $is_working = false;
-    } else {
-        $is_working = true;
-    }
-
-    curl_close($ch);
-
-    return $is_working;
 }
 
 // POST endpoint for creating a new post

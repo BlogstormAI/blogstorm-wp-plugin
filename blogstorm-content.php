@@ -9,6 +9,16 @@ Author URI: https://bishwas.net
 License: A "Slug" license name e.g. GPL2
 */
 
+// Exit if accessed directly
+if (!defined('ABSPATH')) {
+    exit;
+}
+
+// Check if we're in a WordPress environment
+if (!function_exists('add_action')) {
+    return;
+}
+
 define("BASE_PLUGIN_PATH", plugin_basename(__FILE__));
 define("BASE_PLUGIN_DIR", plugin_dir_path(__FILE__));
 const BS_TOKEN_NAME = 'blogstorm_auth_token';
@@ -17,16 +27,31 @@ const BS_DEV_PING_VERIFY_URL = 'http://localhost:8000/public-api/ping-wordpress-
 
 const BS_TOKEN_LENGTH = 32;
 
+// Function to get plugin directory path safely
+function blogstorm_get_plugin_path($path) {
+    return function_exists('plugin_dir_path') ? plugin_dir_path(__FILE__) . $path : dirname(__FILE__) . '/' . $path;
+}
+
 // Include the category and tag endpoint files
-require_once plugin_dir_path(__FILE__) . 'endpoints/links/internal_links.php';
-require_once plugin_dir_path(__FILE__) . 'endpoints/categories/categories.php';
-require_once plugin_dir_path(__FILE__) . 'endpoints/tags/tags.php';
-require_once plugin_dir_path(__FILE__) . 'endpoints/posts/posts.php';
-require_once plugin_dir_path(__FILE__) . 'endpoints/site-info/site-info.php';
-require_once plugin_dir_path(__FILE__) . 'endpoints/ping/verify.php';
-require_once plugin_dir_path(__FILE__) . 'endpoints/pages/page.php';
+$required_files = array(
+    'endpoints/links/internal_links.php',
+    'endpoints/categories/categories.php',
+    'endpoints/tags/tags.php',
+    'endpoints/posts/posts.php',
+    'endpoints/site-info/site-info.php',
+    'endpoints/ping/verify.php',
+    'endpoints/pages/page.php',
+    'endpoints/iframe/iframe.php'
+);
+
+foreach ($required_files as $file) {
+    $file_path = blogstorm_get_plugin_path($file);
+    if (file_exists($file_path)) {
+        require_once $file_path;
+    }
+}
 
 // Include settings code
-if (is_admin()) {
-    require_once plugin_dir_path(__FILE__) . 'settings/settings.php';
+if (function_exists('is_admin') && is_admin()) {
+    require_once blogstorm_get_plugin_path('settings/settings.php');
 }

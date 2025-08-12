@@ -1,7 +1,7 @@
 === Blogstorm AI Content ===
 Contributors: Blogstorm
 Tags: AI content, AI writing automation, seo writing
-Tested up to: 6.2
+Tested up to: 6.8
 Requires at least: 4.9
 Requires PHP: 5.6
 Stable tag: 1.1.3

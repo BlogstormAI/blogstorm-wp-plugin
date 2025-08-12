@@ -1,4 +1,4 @@
-=== Blogstorm ===
+=== Blogstorm AI Content ===
 Contributors: Blogstorm
 Tags: AI content, AI writing automation, seo writing
 Tested up to: 6.2

@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: Blogstorm Content
+Plugin Name: Blogstorm AI Content
 Plugin URI: https://www.blogstorm.ai
 Description: A plugin to manage content for Blogstorm, the AI-powered content publishing platform.
 Version: 1.0.3

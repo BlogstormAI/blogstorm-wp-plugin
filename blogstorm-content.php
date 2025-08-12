@@ -6,7 +6,8 @@ Description: A plugin to manage content for Blogstorm, the AI-powered content pu
 Version: 1.1.3
 Author: Bishwas Bhandari
 Author URI: https://bishwas.net
-License: A "Slug" license name e.g. GPL2
+License: GPLv2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 */
 
 // Exit if accessed directly

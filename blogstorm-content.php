@@ -4,8 +4,8 @@ Plugin Name: Blogstorm AI Content
 Plugin URI: https://www.blogstorm.ai
 Description: A plugin to manage content for Blogstorm, the AI-powered content publishing platform.
 Version: 1.1.3
-Author: Bishwas Bhandari
-Author URI: https://bishwas.net
+Author: Byteoski
+Author URI: https://byteoski.com/
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 */

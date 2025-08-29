@@ -1,5 +1,5 @@
 === Blogstorm AI Content ===
-Contributors: Blogstorm
+Contributors: Byteoski
 Tags: AI content, AI writing automation, seo writing
 Tested up to: 6.8
 Requires at least: 4.9
